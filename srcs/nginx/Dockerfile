@@ -8,7 +8,6 @@ RUN		openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /etc/nginx
 
 COPY	conf/nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
-EXPOSE 443
+EXPOSE	443
 
 ENTRYPOINT	["nginx", "-g", "daemon off;"]
