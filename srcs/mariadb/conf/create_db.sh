@@ -1,15 +1,11 @@
-#!/bin/bash
+#!bin/sh
 
-# MySQL might be in a different location in Debian
-MYSQL_DIR="/var/lib/mysql"
-MYSQL_DATA_DIR="/var/lib/mysql/mysql"
+if [ ! -d "/var/lib/mysql/mysql" ]; then
 
-if [ ! -d "${MYSQL_DATA_DIR}" ]; then
+        chown -R mysql:mysql /var/lib/mysql
 
-        chown -R mysql:mysql ${MYSQL_DIR}
-
-        # Debian might use mariadb-install-db instead of mysql_install_db
-        mariadb-install-db --basedir=/usr --datadir=${MYSQL_DIR} --user=mysql
+        # init database
+        mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm
 
         tfile=`mktemp`
         if [ ! -f "$tfile" ]; then
@@ -17,22 +13,22 @@ if [ ! -d "${MYSQL_DATA_DIR}" ]; then
         fi
 fi
 
-if [ ! -d "${MYSQL_DIR}/wordpress" ]; then
+if [ ! -d "/var/lib/mysql/wordpress" ]; then
 
         cat << EOF > /tmp/create_db.sql
 USE mysql;
 FLUSH PRIVILEGES;
 DELETE FROM     mysql.user WHERE User='';
 DROP DATABASE test;
-DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+DELETE FROM mysql.db WHERE Db='test';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT}';
-CREATE DATABASE ${DB_NAME} CHARACTER SET utf8 COLLATE utf8_general_ci;
-CREATE USER '${DB_USER}'@'%' IDENTIFIED by '${DB_PASS}';
-GRANT ALL PRIVILEGES ON wordpress.* TO '${DB_USER}'@'%';
+ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+CREATE DATABASE ${WP_DB_NAME} CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER '${WP_DB_USER}'@'%' IDENTIFIED by '${WP_DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON wordpress.* TO '${WP_DB_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
-        # mysqld location might be different in Debian, use the full path if necessary
-        /usr/sbin/mysqld --user=mysql --bootstrap < /tmp/create_db.sql
+        # run init.sql
+        /usr/bin/mysqld --user=mysql --bootstrap < /tmp/create_db.sql
         rm -f /tmp/create_db.sql
 fi

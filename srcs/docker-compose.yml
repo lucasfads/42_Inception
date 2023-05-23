@@ -16,3 +16,17 @@ services:
       - ./nginx/tools:/etc/nginx/ssl/
       - /home/${USER}/simple_docker_nginx_html/public/html:/var/www/
     restart: unless-stopped
+
+  mariadb:
+    build:
+      context: .
+      dockerfile: mariadb/Dockerfile
+      args:
+        WP_DB_NAME: ${WP_DB_NAME}
+        WP_DB_USER: ${WP_DB_USER}
+        WP_DB_PASSWORD: ${WP_DB_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    restart: always
