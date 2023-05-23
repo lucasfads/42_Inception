@@ -2,3 +2,5 @@ logs/
 README.md
 secret.txt
 .DS_Store
+*.crt
+*.key
