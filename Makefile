@@ -13,7 +13,7 @@ down:
 	docker-compose -f ./srcs/docker-compose.yml down
 
 prune:
-	docker system prune -a
+	docker system prune -a --volumes
 
 # UTILS
 
@@ -26,6 +26,10 @@ mkcert-generate:
 	mv $(LOGIN).42.fr.pem ./srcs/tools/$(LOGIN).42.fr.crt
 	mkdir ./srcs/nginx/tools/
 	cp ./srcs/tools/* ./srcs/nginx/tools/
+
+datadir:
+	chmod +x srcs/wordpress/tools/make_dir.sh
+	srcs/wordpress/tools/make_dir.sh
 
 .PHONY	: all build down re clean fclean
 

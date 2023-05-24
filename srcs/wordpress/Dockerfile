@@ -1,11 +1,14 @@
-FROM debian:buster
+FROM alpine:3.17
 
-ARG PHP_VERSION=8.0 \
-    DB_NAME \
-    DB_USER \
-    DB_PASS
+ARG PHP_VERSION=8 \
+    WP_DB_NAME \
+    WP_DB_USER \
+    WP_DB_PASSWORD
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+RUN echo 'https://dl-cdn.alpinelinux.org/alpine/v3.16/community' >> /etc/apk/repositories
+RUN echo 'https://dl-cdn.alpinelinux.org/alpine/v3.16/main' >> /etc/apk/repositories
+
+RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-mysqli \
@@ -13,30 +16,27 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     php${PHP_VERSION}-curl \
     php${PHP_VERSION}-dom \
     php${PHP_VERSION}-exif \
+    php${PHP_VERSION}-fileinfo \
     php${PHP_VERSION}-mbstring \
+    php${PHP_VERSION}-openssl \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
-    php-redis \
+    php${PHP_VERSION}-redis \
     wget \
     unzip && \
-    sed -i "s|listen = /run/php/php8.0-fpm.sock|listen = 9000|g" \
-      /etc/php/8.0/fpm/pool.d/www.conf && \
-    sed -i "s|;listen.owner = www-data|listen.owner = www-data|g" \
-      /etc/php/8.0/fpm/pool.d/www.conf && \
-    sed -i "s|;listen.group = www-data|listen.group = www-data|g" \
-      /etc/php/8.0/fpm/pool.d/www.conf
-
-WORKDIR /var/www/html
-
+    sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
+      /etc/php8/php-fpm.d/www.conf && \
+    sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" \
+      /etc/php8/php-fpm.d/www.conf && \
+    sed -i "s|;listen.group = nobody|listen.group = nobody|g" \
+      /etc/php8/php-fpm.d/www.conf && \
+    rm -f /var/cache/apk/*
+WORKDIR /var/www
 RUN wget https://wordpress.org/latest.zip && \
     unzip latest.zip && \
     cp -rf wordpress/* . && \
     rm -rf wordpress latest.zip
-
-COPY ./requirements/wordpress/conf/wp-config-create.sh .
-
-RUN bash wp-config-create.sh && rm wp-config-create.sh && \
-    chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 wp-content/
-
-CMD ["/usr/sbin/php-fpm8.0", "-F"]
+COPY ./wordpress/conf/wp-config-create.sh .
+RUN sh wp-config-create.sh && rm wp-config-create.sh && \
+    chmod -R 0777 wp-content/
+CMD ["/usr/sbin/php-fpm8", "-F"]
