@@ -1,6 +1,6 @@
 # Requisitos
  - Docker
- - Containerd
+ - Docker compose
  - Make
  - Git
 
