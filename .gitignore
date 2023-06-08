@@ -4,3 +4,4 @@ secret.txt
 .DS_Store
 *.crt
 *.key
+.env
