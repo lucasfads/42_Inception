@@ -9,17 +9,17 @@
 
 # ENV Exemplo
 ```
-INTRA_LOGIN=lucafern
+INTRA_LOGIN=login
 
-DOMAIN_NAME=lucafern.42.fr
+DOMAIN_NAME=login.42.fr
 
-CERT_=./srcs/tools/lucafern.42.fr.crt
-KEY_=./srcs/tools/lucafern.42.fr.key
+CERT_=./srcs/tools/login.42.fr.crt
+KEY_=./srcs/tools/login.42.fr.key
 
 MYSQL_HOST=mariadb
-MYSQL_ROOT_PASSWORD=123456
+MYSQL_ROOT_PASSWORD=password1
 
-WP_DB_NAME=wordpress
-WP_DB_USER=lucafern
-WP_DB_PASSWORD=123456
+WP_DB_NAME=databasename
+WP_DB_USER=login
+WP_DB_PASSWORD=password2
 ```
