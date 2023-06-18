@@ -58,11 +58,11 @@ services:
     build:
       context: .
       dockerfile: wordpress/Dockerfile
-      args:
-        WP_DB_NAME: ${WP_DB_NAME}
-        WP_DB_USER: ${WP_DB_USER}
-        WP_DB_PASSWORD: ${WP_DB_PASSWORD}
-        MYSQL_HOST: ${MYSQL_HOST}
+    environment:
+      WP_DB_NAME: ${WP_DB_NAME}
+      WP_DB_USER: ${WP_DB_USER}
+      WP_DB_PASSWORD: ${WP_DB_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
     container_name: wordpress
     depends_on:
       - mariadb
