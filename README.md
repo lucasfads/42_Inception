@@ -7,6 +7,12 @@
 # NGINX
 É ele que nos permitirá acessar nosso site WordPress. O trabalho dele é basicamente cuidar das portas.
 
+# MariaDB
+Seu banco de dados
+
+# WordPress
+CMS (Content Management System) mais usado do mundo.
+
 # ENV Exemplo
 ```
 INTRA_LOGIN=login
