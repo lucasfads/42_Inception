@@ -1,9 +1,6 @@
 #!/bin/sh
 cd /var/www/
 if [ ! -f "/var/www/wp-config.php" ]; then
-  echo "test"
-  echo "${MYSQL_HOST}"
-  echo "${WP_DB_NAME}"
   /usr/local/bin/wp config create --dbname="${WP_DB_NAME}" --dbuser="${WP_DB_USER}" --dbpass="${WP_DB_PASSWORD}" --dbhost="${MYSQL_HOST}" --force
   /usr/local/bin/wp config set FS_METHOD 'direct'
   /usr/local/bin/wp config set WP_REDIS_HOST 'redis'
