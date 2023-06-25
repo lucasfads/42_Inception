@@ -1,23 +1,14 @@
-#!bin/sh
+#!/bin/sh
+cd /var/www/
 if [ ! -f "/var/www/wp-config.php" ]; then
-cat << EOF > /var/www/wp-config.php
-<?php
-define( 'DB_NAME', '${WP_DB_NAME}' );
-define( 'DB_USER', '${WP_DB_USER}' );
-define( 'DB_PASSWORD', '${WP_DB_PASSWORD}' );
-define( 'DB_HOST', '${MYSQL_HOST}' );
-define( 'DB_CHARSET', 'utf8' );
-define( 'DB_COLLATE', '' );
-define('FS_METHOD','direct');
-\$table_prefix = 'wp_';
-define( 'WP_DEBUG', false );
-if ( ! defined( 'ABSPATH' ) ) {
-define( 'ABSPATH', __DIR__ . '/' );}
-define( 'WP_REDIS_HOST', 'redis' );
-define( 'WP_REDIS_PORT', 6379 );
-define( 'WP_REDIS_TIMEOUT', 1 );
-define( 'WP_REDIS_READ_TIMEOUT', 1 );
-define( 'WP_REDIS_DATABASE', 0 );
-require_once ABSPATH . 'wp-settings.php';
-EOF
+  /usr/local/bin/wp config create --dbname="${WP_DB_NAME}" --dbuser="${WP_DB_USER}" --dbpass="${WP_DB_PASSWORD}" --dbhost="${MYSQL_HOST}" --force
+  /usr/local/bin/wp config set FS_METHOD 'direct'
+  /usr/local/bin/wp config set WP_REDIS_HOST 'redis'
+  /usr/local/bin/wp config set WP_REDIS_PORT 6379
+  /usr/local/bin/wp config set WP_REDIS_TIMEOUT 1
+  /usr/local/bin/wp config set WP_REDIS_READ_TIMEOUT 1
+  /usr/local/bin/wp config set WP_REDIS_DATABASE 0
+  
+  /usr/local/bin/wp core install --url="https://${INTRA_LOGIN}.42.fr" --title="${WP_SITE_NAME}" --admin_user="${WP_ADMIN_NAME}" --admin_password="${WP_ADMIN_PASSWORD}" --admin_email="${WP_ADMIN_EMAIL}"
+  /usr/local/bin/wp user create "${WP_USER_NAME}" "${WP_USER_EMAIL}" --role="editor" --user_pass="${WP_USER_PASSWORD}"
 fi
