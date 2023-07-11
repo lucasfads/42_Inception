@@ -25,7 +25,7 @@ DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 CREATE DATABASE ${WP_DB_NAME} CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE USER '${WP_DB_USER}'@'%' IDENTIFIED by '${WP_DB_PASSWORD}';
-GRANT ALL PRIVILEGES ON wordpress.* TO '${WP_DB_USER}'@'%';
+GRANT ALL PRIVILEGES ON ${WP_DB_USER}.* TO '${WP_DB_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
         # run init.sql
